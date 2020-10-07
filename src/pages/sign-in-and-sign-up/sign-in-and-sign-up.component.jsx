@@ -1,7 +1,7 @@
 import React from "react";
 
 //Import styles
-import './sign-in-and-sign-up.styles.scss';
+import {SignInSignUpContainer} from "./sign-in-and-sign-up.styles";
 
 //Import components
 import SignIn from "../../components/sign-in/sign-in.component";
@@ -9,9 +9,9 @@ import SignUp from "../../components/sign-up/sign-up.component";
 
 export const SignInSignUpPage = ()=>{
     return(
-        <div className={'sign-in-and-sign-up'}>
+        <SignInSignUpContainer>
             <SignIn/>
             <SignUp/>
-        </div>
+        </SignInSignUpContainer>
     )
 };
