@@ -1,4 +1,5 @@
 import React from "react";
+import {connect} from 'react-redux';
 
 //Import styles
 import './sign-up.styles.scss';
@@ -10,48 +11,42 @@ import {CustomButton} from "../custom-button/custom-button.component";
 //Import firebase
 import {auth, createUserProfileDocument} from "../../firebase/firebase.utils";
 
-class SignUp extends React.Component{
+//Import redux actions
+import {signUpStart} from "../../redux/user/user.actions";
+
+class SignUp extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            displayName:'',
-            email:'',
-            password:'',
-            confirmPassword:''
+            displayName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
         }
     }
 
-    handleChange = (event)=>{
+    handleChange = (event) => {
         event.preventDefault();
         const {name, value} = event.target;
-        this.setState({[name]:value})
+        this.setState({[name]: value})
     };
 
-    handleSubmit = async (event)=>{
+    handleSubmit = async (event) => {
         event.preventDefault();
+        const{signUpStart} = this.props;
         const {displayName, email, password, confirmPassword} = this.state;
-        if(password !== confirmPassword){
+        if (password !== confirmPassword) {
             alert('Password dont match');
             return;
         }
-        try{
-            const {user} = await auth.createUserWithEmailAndPassword(email, password);
-            await createUserProfileDocument(user, {displayName});
-            this.setState({
-                displayName:'',
-                email:'',
-                password:'',
-                confirmPassword:''
-            })
-        }catch (e) {
-            console.log("Couldnt perform the sign up", e.message);
-        }
+
+        signUpStart({email, password, displayName});
 
     };
 
     render() {
-        return(
+        return (
             <div className={'sign-up'}>
                 <h2>I do not have an account</h2>
                 <span>Sign up with your email and password</span>
@@ -89,6 +84,12 @@ class SignUp extends React.Component{
             </div>
         )
     }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        signUpStart:(userCredentials)=>dispatch(signUpStart(userCredentials))
+    }
 };
 
-export default SignUp;
+export default connect(null, mapDispatchToProps)(SignUp);
